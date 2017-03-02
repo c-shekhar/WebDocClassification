@@ -1,10 +1,10 @@
 Implementing scalable web document classification
 
-|-Data Ingestion
+ * Data Ingestion
     |-
 
-|-Main Content Classification
+ * Main Content Classification
     |-
 
-|-Text Classification
+ * Text Classification
     |-
