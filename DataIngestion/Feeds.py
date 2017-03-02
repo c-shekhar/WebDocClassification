@@ -1,4 +1,3 @@
-
 import feedparser
 import requests
 import unicodedata
@@ -29,16 +28,8 @@ class Feeds():
 				feedLinkEntry['title'] = eachFeed['title_detail']['value']
 				html = requests.get(eachFeed['link']).text
 				soup = BeautifulSoup(html,"html.parser")
-				feedLinkEntry['html'] = soup.select('body')
+				feedLinkEntry['html'] = soup.encode()
 				feedLinkEntry['source'] = feedLink['source']
+
 				self.db[self.dataCollectionName].insert(feedLinkEntry)
-
-
-# 	def crawlUrl(self, urlToCrawl):
-# 		pass
-
-# ndtvFeedsObject = ndtvFeeds(dbObject,feedsCollectionName,dataCollectionName)
-
-# @app.task
-# def runnerCrawlUrl(feedToCrawl):
-# 	ndtvFeedsObject.crawlFeed(feedToCrawl)
+			self.db[self.feedsCollectionName].update({'_id':feedLink['_id']},{'$set':{'crawled':True}}) 
