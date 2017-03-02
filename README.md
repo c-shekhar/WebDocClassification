@@ -1,10 +1,25 @@
-Implementing scalable web document classification
+**Implementing scalable web document classification**
 
- * Data Ingestion
-    |-
+This tool scrapes a web page and classifies the category the web page belongs to. The category can be::
+ + Health
+ + Education
+ + Business
+ + Entertainment
+ + Sports
+ + Tech
 
- * Main Content Classification
-    |-
+Following steps have been implemented:
 
- * Text Classification
-    |-
+ 1. **Data Ingestion**
+    
+
+ 2. **Block Segmentation**
+    
+
+ 3. **Text Classification**
+
+Working on:
+ 
+ - *BoilerPlate Detection*
+ - *Fitting a text based model*
+    
