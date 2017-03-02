@@ -1,4 +1,5 @@
-**Implementing scalable web document classification**
+## Implementing scalable web document classification
+======================================================================================
 
 This tool scrapes a web page and classifies the category the web page belongs to. The category can be:
  + Health
