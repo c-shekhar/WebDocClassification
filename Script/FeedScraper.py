@@ -13,16 +13,16 @@ FEEDS_COLLECTION_NAME = "feedsInfo"
 DATA_COLLECTION_NAME = "htmlInfo"
 
 #for all the feeds
-toiFeedHTML = requests.get('http://timesofindia.indiatimes.com/rss.cms').text
-toiSoup = BeautifulSoup(toiFeedHTML,"html.parser")
-feeds = toiSoup.find(text='Main Feeds').parent.parent.select('tr td a')
+FeedHTML = requests.get('http://www.ndtv.com/rss').text
+Soup = BeautifulSoup(FeedHTML,"html.parser")
+feeds = Soup.select('li a')
 feedsList = ["Health","Sports","Entertainment","Business","Education","Science","Tech"]
 for feed in feeds:
 	if feed.getText() in feedsList and 'rssfeedsvideo' not in feed['href']:
 		
 		feedEntry = {}
 		feedEntry['category'] = feed.getText()
-		feedEntry['source'] = 'TOI'
+		feedEntry['source'] = 'NDTV'
 		feedEntry['crawled'] = False
 		feedEntry['url'] = feed['href']
 		feedEntry['_id'] = feedEntry['category'] + '_' + feed['href']
