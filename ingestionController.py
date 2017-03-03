@@ -1,6 +1,6 @@
-from DataIngestion.ndtvFeedSeeder import ndtvFeedsObject
-from ingestionConfig import *
+from DataIngestion.Feeds import *
+from config import *
 import sys
-feedToCrawl = sys.argv[1]
-# feedToCrawl = "http://feeds.feedburner.com/ndtvmovies-latest"
-ndtvFeedsObject.getUrlsFromFeed(feedToCrawl)
+
+feedsObject = Feeds(db, FEEDS_COLLECTION_NAME, DATA_COLLECTION_NAME)
+feedsObject.getUrlsFromFeed()
