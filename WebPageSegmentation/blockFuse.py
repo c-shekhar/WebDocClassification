@@ -2,28 +2,27 @@ from bs4 import BeautifulSoup,NavigableString,Tag
 from collections import OrderedDict
 
 class BlockFusion():
-	def __init__(self):
+	def __init__(self, maxChar, noLines):
 		self.threshold = 0.4
-
-
-
+		self.maxChar = maxChar
+		self.noLines = noLines
 	def getWrappedLines(self, textStr):    
 		wrappedTextList = []
 		# Assuming wmax = 80
 		# Will be managed from config in future
-		if len(textStr) > MAXIMUM_CHARACTERS:
+		if len(textStr) > self.maxChar:
 			tokenList  = [token for token in textStr.split() if token.strip()]
 			# Avg 13 token per line
 			# Will be managed from config in future
 			# 14 = 13 + 1
-			breakPoints = len(tokenList)/STATEMENT_LENGTH
+			breakPoints = len(tokenList)/self.noLines
 			if breakPoints > 0:
 				for i in range(breakPoints):
 					line = ""
-					line += (" ").join(tokenList[STATEMENT_LENGTH*i:STATEMENT_LENGTH*(i+1)])
+					line += (" ").join(tokenList[self.noLines*i:self.noLines*(i+1)])
 					if line:
 						wrappedTextList.append(line.encode("utf-8").decode("ascii","ignore"))
-				line = (" ").join(tokenList[STATEMENT_LENGTH*breakPoints:])
+				line = (" ").join(tokenList[self.noLines*breakPoints:])
 				wrappedTextList.append(line.encode("utf-8").decode("ascii","ignore"))
 			else:
 				lineText = (" ").join([self.stripEndChars(eachToken) for eachToken in textStr.split()])
