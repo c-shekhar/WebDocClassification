@@ -127,6 +127,10 @@ class BlockFusion():
 			docWithTokenCount = eachDoc
 			data = eachDoc['data']
 			docWithTokenCount['tokenCount'] = len(data.split())
+			if docWithTokenCount['tokenCount'] > 30:
+				docWithTokenCount['label'] = 'main'
+			else:
+				docWithTokenCount['label'] = 'boiler plate'
 		 	fusedDocsWithTokenCount.append(docWithTokenCount)
 		return fusedDocsWithTokenCount
 
