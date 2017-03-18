@@ -2,10 +2,12 @@ from bs4 import BeautifulSoup,NavigableString,Tag
 from collections import OrderedDict
 
 class BlockFusion():
-	def __init__(self, maxChar, noLines):
+	def __init__(self, maxChar, noLines, bolierPlateThreshold):
 		self.threshold = 0.4
 		self.maxChar = maxChar
 		self.noLines = noLines
+		self.bolierPlateThreshold = bolierPlateThreshold
+		
 	def getWrappedLines(self, textStr):    
 		wrappedTextList = []
 		# Assuming wmax = 80
@@ -127,6 +129,10 @@ class BlockFusion():
 			docWithTokenCount = eachDoc
 			data = eachDoc['data']
 			docWithTokenCount['tokenCount'] = len(data.split())
+			if docWithTokenCount['tokenCount'] > self.bolierPlateThreshold:
+				docWithTokenCount['label'] = 'main'
+			else:
+				docWithTokenCount['label'] = 'boiler plate'
 		 	fusedDocsWithTokenCount.append(docWithTokenCount)
 		return fusedDocsWithTokenCount
 

@@ -16,7 +16,7 @@ def runner(url):
 	blockSegmentorObject.getBlockSegments(bodyTag,blockStack)
 	atomicBlockDict = blockSegmentorObject.getAtomicBlocks(blockStack)
 	#object for block fusion
-	blockFusionObject = BlockFusion(MAXIMUM_CHARACTERS, STATEMENT_LENGTH)
+	blockFusionObject = BlockFusion(MAXIMUM_CHARACTERS, STATEMENT_LENGTH, BOILER_PLATE_THRESHOLD)
 	return blockFusionObject.getDoc(atomicBlockDict)
 
 if __name__ == '__main__':
