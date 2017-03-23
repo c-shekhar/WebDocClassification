@@ -57,9 +57,12 @@ class BlockFusion():
 		toLoop = True
 		listToIterate = nonEmptyBlocks[:]
 		tempBlock = {
+						'blockId' : '',
 						'data' : '',
+						'anchorData' : '',
 						'textDensity' : 0,
-						'blockId' : ''
+						'linkDensity' : 0,
+
 					}
 		while toLoop:
 			toLoop = False
@@ -95,24 +98,38 @@ class BlockFusion():
 			return True
 		return False
 
+	# fuse two blocks by concatenating data and calculating text density and 
+	# link density again on contenated text
 	def fuseTwoBlocks(self, prevBlock, currBlock):
 		fusedBlock = {}
-		data = prevBlock["data"] + " ||" + currBlock["data"]
-		textDensity = prevBlock["textDensity"] + currBlock["textDensity"]
+		data = prevBlock["data"] + " " + currBlock["data"]
+		anchorData = prevBlock["anchorData"] + " " + currBlock["anchorData"]
+		wrappedText = self.getWrappedLines(data)
+		textDensity = self.getTextDensity(wrappedText)
+		linkDensity = self.getLinkDensity(data, anchorData)
 		blockId = prevBlock["blockId"] + " | " + currBlock["blockId"]
 		fusedBlock["data"] = data
+		fusedBlock["anchorData"] = anchorData
 		fusedBlock["textDensity"] = textDensity
 		fusedBlock["blockId"] = blockId
+		fusedBlock["linkDensity"] = linkDensity
 		return fusedBlock
 
+	# fuse three blocks by concatenating data and calculating text density and 
+	# link density again on contenated text
 	def fuseThreeBlocks(self, prevBlock, currBlock, nextBlock):
 		fusedBlock = {}
-		data = prevBlock["data"] + " ||" + currBlock["data"] + " ||" + nextBlock["data"]
-		textDensity = prevBlock["textDensity"] + currBlock["textDensity"] + nextBlock["textDensity"]
+		data = prevBlock["data"] + " " + currBlock["data"] + " " + nextBlock["data"]
+		anchorData = prevBlock["anchorData"] + " " + currBlock["anchorData"] + " " + nextBlock["anchorData"]
+		wrappedText = self.getWrappedLines(data)
+		textDensity = self.getTextDensity(wrappedText)
+		linkDensity = self.getLinkDensity(data, anchorData)
 		blockId = prevBlock["blockId"] + " | " + currBlock["blockId"] + " | " + nextBlock["blockId"]
 		fusedBlock["data"] = data
+		fusedBlock["anchorData"] = anchorData
 		fusedBlock["textDensity"] = textDensity
 		fusedBlock["blockId"] = blockId
+		fusedBlock["linkDensity"] = linkDensity
 		return fusedBlock
 
 	def getTextDensityDelta(self, prevBlock, currBlock):
@@ -139,16 +156,29 @@ class BlockFusion():
 	def stripEndChars(self, token):
 		return token.strip(",").strip(".").strip("-").strip(" ").strip(":")
 
-	def getDoc(self, atomicBlockDict):
+	# to calculate link density no of words within A tags in a block divided 
+	# by number of words in whole text in a block
+	def getLinkDensity(self, text, anchorText):
+		textTokenList = [token for token in text.split() if token.strip()]
+		anchorTokenList = [token for token in anchorText.split() if token.strip()]
+		if len(textTokenList) == 0:
+			return len(anchorTokenList)
+		return float(len(anchorTokenList))/len(textTokenList)
+
+	def getDoc(self, atomicBlocks):
 		docs = []
-		for blockId, block in atomicBlockDict.iteritems():
+		for block in atomicBlocks:
 			metaDict = {}
-			blockText = block.get_text()
+			blockText = block['text']
+			anchorText = block['a']
 			wrappedText = self.getWrappedLines(blockText)
 			blockTextDensity = self.getTextDensity(wrappedText)
-			metaDict['blockId'] = blockId
+			linkDensity = self.getLinkDensity(block['text'], block['a'])
+			metaDict['blockId'] = block['id']
 			metaDict['data'] = blockText
+			metaDict['anchorData'] = anchorText
 			metaDict['textDensity'] = blockTextDensity
+			metaDict['linkDensity'] = linkDensity
 			docs.append(metaDict)
 		fusedDocs = self.getFusedTextBlocks(docs)
 		fusedDocsWithTokenCount = self.addTokenCount(fusedDocs)
