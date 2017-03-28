@@ -146,7 +146,8 @@ class BlockFusion():
 			docWithTokenCount = eachDoc
 			data = eachDoc['data']
 			docWithTokenCount['tokenCount'] = len(data.split())
-			if docWithTokenCount['tokenCount'] > self.bolierPlateThreshold:
+			if docWithTokenCount['tokenCount'] > self.bolierPlateThreshold\
+			and docWithTokenCount['tokenCount'] != docWithTokenCount['textDensity']:
 				docWithTokenCount['label'] = 'main'
 			else:
 				docWithTokenCount['label'] = 'boiler plate'
