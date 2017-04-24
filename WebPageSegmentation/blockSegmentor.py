@@ -61,5 +61,5 @@ class BlockSegmentor():
 			eachBlock['text'] = " ".join([text.encode('utf8').decode('ascii','ignore') for text in eachBlock['text'] if text.strip()])
 			eachBlock['a'] = " ".join([anchorText.encode('utf8').decode('ascii', 'ignore') for anchorText in eachBlock['a']  if anchorText.strip()])
 		#SORTING On Keys
-		orderedBlockDict = sorted(blkStack, key=lambda x: x['id'])
+		orderedBlockDict = sorted(blkStack, key=lambda x: int(x['id'].strip('B')))
 		return orderedBlockDict
