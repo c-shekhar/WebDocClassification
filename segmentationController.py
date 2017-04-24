@@ -29,7 +29,6 @@ if __name__ == '__main__':
 		doc = {}
 		doc["_id"] = eachUrl['url']
 		doc["blocks"] = runner(eachUrl)
-		print doc
 		try:
 			db[BLOCK_COLLECTION_NAME].insert(doc)
 		except Exception as e:
