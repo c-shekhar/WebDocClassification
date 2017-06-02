@@ -63,6 +63,7 @@ class BlockFusion():
 						'textDensity' : 0,
 						'linkDensity' : 0,
 
+
 					}
 		while toLoop:
 			toLoop = False
@@ -166,6 +167,31 @@ class BlockFusion():
 			return len(anchorTokenList)
 		return float(len(anchorTokenList))/len(textTokenList)
 
+	# to add previous and next block features to the current block
+	def addPrevNextBlckFeatures(self, blocks):
+		prevLinkDensity = 0
+		prevTextDensity = 0
+		prevNumWords = 0
+		for i in range(0,len(blocks)-1):
+			blocks[i]['prevLinkDensity'] = prevLinkDensity
+			blocks[i]['prevTextDensity'] = prevTextDensity
+			blocks[i]['prevNumWords'] = prevNumWords
+			blocks[i]['nextLinkDensity'] = blocks[i+1]['linkDensity']
+			blocks[i]['nextTextDensity'] = blocks[i+1]['textDensity']
+			blocks[i]['nextNumWords'] = len(blocks[i+1]['data'].split())
+			blocks[i]['numWords'] = len(blocks[i]['data'].split())
+			prevLinkDensity = blocks[i]['linkDensity']
+			prevTextDensity = blocks[i]['textDensity']
+			prevNumWords = blocks[i]['numWords']
+		blocks[-1]['prevLinkDensity'] = prevLinkDensity
+		blocks[-1]['prevTextDensity'] = prevTextDensity
+		blocks[-1]['prevNumWords'] = prevNumWords
+		blocks[-1]['numWords'] = len(blocks[-1]['data'].split())
+		blocks[-1]['nextLinkDensity'] = 0
+		blocks[-1]['nextTextDensity'] = 0
+		blocks[-1]['nextNumWords'] = 0
+		return blocks
+
 	def getDoc(self, atomicBlocks):
 		docs = []
 		for block in atomicBlocks:
@@ -183,4 +209,5 @@ class BlockFusion():
 			docs.append(metaDict)
 		fusedDocs = self.getFusedTextBlocks(docs)
 		fusedDocsWithTokenCount = self.addTokenCount(fusedDocs)
-		return fusedDocsWithTokenCount
+		fusedDocsWithPrevNextBlockFeatures = self.addPrevNextBlckFeatures(fusedDocsWithTokenCount)
+		return fusedDocsWithPrevNextBlockFeatures
